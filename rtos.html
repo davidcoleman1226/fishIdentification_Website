@@ -2,14 +2,103 @@
 <html>
 <head>
     <title>RTOS Underwater Image Recovery</title>
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body>
 
 <h1>RTOS Underwater Image Recovery</h1>
 
+<h2>Real-Time Feedback Control System for Underwater Image Enhancement</h2>
+
 <p>
-This page describes the real-time feedback control system used for underwater image enhancement.
+This page presents the real-time underwater image recovery system implemented for the CS 766 fish identification project. The system uses a spatial RGB gain map with temporal feedback smoothing to reduce color distortion, turbidity effects, and low-visibility artifacts before machine learning inference.
 </p>
+
+<h2>Mathematical Foundation</h2>
+
+<p>
+Each video frame is represented as an RGB image:
+</p>
+
+<p>
+\[
+I_k(i,j) =
+\begin{bmatrix}
+R_k(i,j) \\
+G_k(i,j) \\
+B_k(i,j)
+\end{bmatrix}
+\]
+</p>
+
+<p>
+The local mean RGB value is computed over each spatial tile:
+</p>
+
+<p>
+\[
+\bar{I}_{k,m,n} = \frac{1}{|\Omega_{m,n}|}
+\sum_{(i,j)\in \Omega_{m,n}} I_k(i,j)
+\]
+</p>
+
+<p>
+The raw spatial gain is computed as:
+</p>
+
+<p>
+\[
+G^{raw}_{k,m,n} =
+\frac{I_{target}}{\bar{I}_{k,m,n} + \epsilon}
+\]
+</p>
+
+<p>
+Temporal feedback smoothing is applied using:
+</p>
+
+<p>
+\[
+G_k = \alpha G_{k-1} + (1-\alpha)G^{raw}_k
+\]
+</p>
+
+<p>
+The corrected image is then:
+</p>
+
+<p>
+\[
+I^{corrected}_k(i,j) = I_k(i,j) \odot G_k(i,j)
+\]
+</p>
+
+<h2>Pseudocode</h2>
+
+<pre>
+Input: video frame I_k
+Output: corrected frame I_corrected
+
+1. Convert frame from BGR to RGB
+2. Normalize RGB values to [0, 1]
+3. Downsample frame for fast gain computation
+4. Divide downsampled frame into spatial tiles
+5. Compute mean RGB value in each tile
+6. Compute raw gain map using target RGB / measured RGB
+7. Clip gain values between gain_min and gain_max
+8. Apply temporal feedback smoothing
+9. Blur and upsample gain map to full frame size
+10. Multiply original frame by gain map
+11. Apply percentile normalization
+12. Convert corrected frame back to BGR
+</pre>
 
 <p>
 <a href="index.html">Back to Home</a>
