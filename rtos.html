@@ -79,7 +79,27 @@ The corrected image is then:
 I^{corrected}_k(i,j) = I_k(i,j) \odot G_k(i,j)
 \]
 </p>
+<h2>Variable Definitions</h2>
 
+<ul>
+    <li><strong>k</strong>: current video frame index or time step.</li>
+    <li><strong>i, j</strong>: pixel row and column indices in the image.</li>
+    <li><strong>m, n</strong>: spatial tile row and column indices in the downsampled image.</li>
+    <li><strong>I_k(i,j)</strong>: RGB vector at pixel location \((i,j)\) in frame \(k\).</li>
+    <li><strong>R_k(i,j), G_k(i,j), B_k(i,j)</strong>: red, green, and blue channel intensities at pixel \((i,j)\).</li>
+    <li><strong>\Omega_{m,n}</strong>: set of pixels contained inside tile \((m,n)\).</li>
+    <li><strong>|\Omega_{m,n}|</strong>: number of pixels inside tile \((m,n)\).</li>
+    <li><strong>\bar{I}_{k,m,n}</strong>: mean RGB vector measured in tile \((m,n)\) during frame \(k\).</li>
+    <li><strong>I_{target}</strong>: desired target RGB vector used as the reference color balance.</li>
+    <li><strong>\epsilon</strong>: small positive constant used to prevent division by zero.</li>
+    <li><strong>G^{raw}_{k,m,n}</strong>: unsmoothed raw gain vector computed for tile \((m,n)\).</li>
+    <li><strong>G_k</strong>: temporally smoothed spatial gain map at frame \(k\).</li>
+    <li><strong>G_{k-1}</strong>: gain map from the previous frame.</li>
+    <li><strong>\alpha</strong>: feedback smoothing coefficient. Larger values make the gain change more slowly over time.</li>
+    <li><strong>1-\alpha</strong>: weighting applied to the newly computed raw gain map.</li>
+    <li><strong>\odot</strong>: element-wise multiplication between the image RGB vector and the gain vector.</li>
+    <li><strong>I^{corrected}_k(i,j)</strong>: corrected RGB pixel value after applying the feedback-controlled gain map.</li>
+</ul>
 <h2>Pseudocode</h2>
 
 <pre>
