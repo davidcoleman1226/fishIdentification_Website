@@ -5,7 +5,10 @@
 
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            }
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -23,11 +26,8 @@ This page presents the real-time underwater image recovery system implemented fo
 
 <h2>Mathematical Foundation</h2>
 
-<p>
-Each video frame is represented as an RGB image:
-</p>
+<p>Each video frame is represented as an RGB vector field:</p>
 
-<p>
 \[
 I_k(i,j) =
 \begin{bmatrix}
@@ -36,88 +36,107 @@ G_k(i,j) \\
 B_k(i,j)
 \end{bmatrix}
 \]
-</p>
 
-<p>
-The local mean RGB value is computed over each spatial tile:
-</p>
+<p>The local mean RGB value over each spatial tile is:</p>
 
-<p>
 \[
-\bar{I}_{k,m,n} = \frac{1}{|\Omega_{m,n}|}
+\bar{I}_{k,m,n} =
+\frac{1}{|\Omega_{m,n}|}
 \sum_{(i,j)\in \Omega_{m,n}} I_k(i,j)
 \]
-</p>
 
-<p>
-The raw spatial gain is computed as:
-</p>
+<p>The raw spatial gain is computed as:</p>
 
-<p>
 \[
-G^{raw}_{k,m,n} =
-\frac{I_{target}}{\bar{I}_{k,m,n} + \epsilon}
+G^{\text{raw}}_{k,m,n} =
+\frac{I_{\text{target}}}
+{\bar{I}_{k,m,n} + \epsilon}
 \]
-</p>
 
-<p>
-Temporal feedback smoothing is applied using:
-</p>
+<p>The raw gain is clipped to avoid excessive amplification or attenuation:</p>
 
-<p>
 \[
-G_k = \alpha G_{k-1} + (1-\alpha)G^{raw}_k
+G^{\text{clipped}}_{k,m,n} =
+\text{clip}
+\left(
+G^{\text{raw}}_{k,m,n},
+G_{\min},
+G_{\max}
+\right)
 \]
-</p>
 
-<p>
-The corrected image is then:
-</p>
+<p>Temporal feedback smoothing is applied using the previous gain map:</p>
 
-<p>
 \[
-I^{corrected}_k(i,j) = I_k(i,j) \odot G_k(i,j)
+G_{k,m,n} =
+\alpha G_{k-1,m,n}
++
+(1-\alpha)G^{\text{clipped}}_{k,m,n}
 \]
-</p>
+
+<p>The smoothed gain map is expanded back to full image resolution:</p>
+
+\[
+G_k(i,j) =
+\text{resize}
+\left(
+\text{blur}(G_{k,m,n})
+\right)
+\]
+
+<p>The corrected image is produced by applying the gain map element-wise:</p>
+
+\[
+I^{\text{corrected}}_k(i,j) =
+I_k(i,j) \odot G_k(i,j)
+\]
+
 <h2>Variable Definitions</h2>
 
 <ul>
-    <li><strong>k</strong>: current video frame index or time step.</li>
-    <li><strong>i, j</strong>: pixel row and column indices in the image.</li>
-    <li><strong>m, n</strong>: spatial tile row and column indices in the downsampled image.</li>
-    <li><strong>I_k(i,j)</strong>: RGB vector at pixel location \((i,j)\) in frame \(k\).</li>
-    <li><strong>R_k(i,j), G_k(i,j), B_k(i,j)</strong>: red, green, and blue channel intensities at pixel \((i,j)\).</li>
-    <li><strong>\Omega_{m,n}</strong>: set of pixels contained inside tile \((m,n)\).</li>
-    <li><strong>|\Omega_{m,n}|</strong>: number of pixels inside tile \((m,n)\).</li>
-    <li><strong>\bar{I}_{k,m,n}</strong>: mean RGB vector measured in tile \((m,n)\) during frame \(k\).</li>
-    <li><strong>I_{target}</strong>: desired target RGB vector used as the reference color balance.</li>
-    <li><strong>\epsilon</strong>: small positive constant used to prevent division by zero.</li>
-    <li><strong>G^{raw}_{k,m,n}</strong>: unsmoothed raw gain vector computed for tile \((m,n)\).</li>
-    <li><strong>G_k</strong>: temporally smoothed spatial gain map at frame \(k\).</li>
-    <li><strong>G_{k-1}</strong>: gain map from the previous frame.</li>
-    <li><strong>\alpha</strong>: feedback smoothing coefficient. Larger values make the gain change more slowly over time.</li>
-    <li><strong>1-\alpha</strong>: weighting applied to the newly computed raw gain map.</li>
-    <li><strong>\odot</strong>: element-wise multiplication between the image RGB vector and the gain vector.</li>
-    <li><strong>I^{corrected}_k(i,j)</strong>: corrected RGB pixel value after applying the feedback-controlled gain map.</li>
+    <li>\(k\): current video frame index or time step.</li>
+    <li>\(i,j\): pixel row and column indices in the full-resolution image.</li>
+    <li>\(m,n\): spatial tile row and column indices in the downsampled image.</li>
+    <li>\(I_k(i,j)\): RGB vector at pixel location \((i,j)\) in frame \(k\).</li>
+    <li>\(R_k(i,j)\): red channel intensity at pixel \((i,j)\).</li>
+    <li>\(G_k(i,j)\): green channel intensity at pixel \((i,j)\) when used inside the image vector.</li>
+    <li>\(B_k(i,j)\): blue channel intensity at pixel \((i,j)\).</li>
+    <li>\(\Omega_{m,n}\): set of pixels inside spatial tile \((m,n)\).</li>
+    <li>\(|\Omega_{m,n}|\): number of pixels inside tile \((m,n)\).</li>
+    <li>\(\bar{I}_{k,m,n}\): mean RGB vector measured inside tile \((m,n)\) during frame \(k\).</li>
+    <li>\(I_{\text{target}}\): desired target RGB vector used as the color-balance reference.</li>
+    <li>\(\epsilon\): small positive constant used to prevent division by zero.</li>
+    <li>\(G^{\text{raw}}_{k,m,n}\): raw spatial RGB gain vector for tile \((m,n)\).</li>
+    <li>\(G_{\min}\): minimum allowable gain value.</li>
+    <li>\(G_{\max}\): maximum allowable gain value.</li>
+    <li>\(G^{\text{clipped}}_{k,m,n}\): raw gain after limiting it between \(G_{\min}\) and \(G_{\max}\).</li>
+    <li>\(G_{k,m,n}\): temporally smoothed gain value for tile \((m,n)\).</li>
+    <li>\(G_{k-1,m,n}\): previous frame's smoothed gain value for tile \((m,n)\).</li>
+    <li>\(\alpha\): temporal feedback smoothing coefficient.</li>
+    <li>\(1-\alpha\): weighting applied to the newly computed gain.</li>
+    <li>\(G_k(i,j)\): full-resolution gain map value applied at pixel \((i,j)\).</li>
+    <li>\(\odot\): element-wise multiplication between RGB vectors.</li>
+    <li>\(I^{\text{corrected}}_k(i,j)\): corrected RGB output pixel after gain compensation.</li>
 </ul>
+
 <h2>Pseudocode</h2>
 
 <pre>
 Input: video frame I_k
 Output: corrected frame I_corrected
 
-1. Convert frame from BGR to RGB
-2. Normalize RGB values to [0, 1]
-3. Downsample frame for fast gain computation
-4. Divide downsampled frame into spatial tiles
-5. Compute mean RGB value in each tile
-6. Compute raw gain map using target RGB / measured RGB
-7. Clip gain values between gain_min and gain_max
-8. Apply temporal feedback smoothing
-9. Blur and upsample gain map to full frame size
-10. Multiply original frame by gain map
-11. Apply percentile normalization
-12. Convert corrected frame back to BGR
+1. Convert frame from BGR to RGB.
+2. Normalize RGB values to [0, 1].
+3. Downsample the frame for faster computation.
+4. Divide the downsampled frame into spatial tiles.
+5. Compute the mean RGB vector in each tile.
+6. Compute the raw spatial gain using the target RGB vector.
+7. Clip gain values between G_min and G_max.
+8. Apply temporal feedback smoothing using the previous gain map.
+9. Blur and upsample the gain map to full frame resolution.
+10. Multiply the original frame by the full-resolution gain map.
+11. Apply percentile normalization.
+12. Convert the corrected frame back to BGR.
 </pre>
 
 <p>
