@@ -6,11 +6,29 @@
 <body>
 
 <h1>Dataset Creation and Processing Pipeline</h1>
+<h2>Automated Data Mining and Preprocessing Pipeline</h2>
 
 <p>
 This page describes the data mining and preprocessing pipeline used to build the fish species dataset.
 </p>
+    <p>
+The dataset creation process was time-consuming and well-suited for automation. An automated pipeline was developed to mine image data, process images, and organize the dataset. This approach reduces manual effort while maintaining dataset quality. The pipeline is modular and easily customizable, allowing new data sources to be incorporated and image processing methods to be applied across the entire dataset.
 
+<ul>
+    <li>iNaturalist — community-sourced wildlife observations with labeled images</li>
+    <li>GBIF (Global Biodiversity Information Facility) — aggregated biodiversity occurrence records with image data</li>
+</ul>
+    <h2>Pipeline Overview</h2>
+
+<ol>
+    <li>Download images by species using automated scripts (iNaturalist + GBIF)</li>
+    <li>Organize images into species-specific folders</li>
+    <li>Manually filter images (keep / reject / maybe)</li>
+    <li>Isolate high-quality images into a clean dataset</li>
+    <li>Apply background removal and normalization</li>
+    <li>Resize and standardize images for model training</li>
+    <li>Assemble final dataset for machine learning pipeline</li>
+</ol>
 <p>
 <a href="index.html">Back to Home</a>
 </p>
