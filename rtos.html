@@ -101,13 +101,15 @@ I_k(i,j) \odot G_k(i,j)
     <li>\(\Omega_{m,n}\): pixel set in tile</li>
     <li>\(\bar{I}_{k,m,n}\): mean RGB in tile</li>
     <li>\(I_{\text{target}}\): target RGB vector</li>
-    <li>\(\epsilon\): small constant</li>
+    <li>\(\epsilon\): small constant used to prevent division by zero</li>
     <li>\(G^{\text{raw}}_{k,m,n}\): raw gain</li>
     <li>\(G^{\text{clipped}}_{k,m,n}\): clipped gain</li>
     <li>\(G_{k,m,n}\): smoothed gain</li>
-    <li>\(\alpha\): smoothing factor</li>
+    <li>\(G_{k-1,m,n}\): previous frame gain</li>
+    <li>\(\alpha\): temporal smoothing factor</li>
     <li>\(G_k(i,j)\): full-resolution gain</li>
     <li>\(\odot\): element-wise multiplication</li>
+    <li>\(I^{\text{corrected}}_k(i,j)\): corrected output image</li>
 </ul>
 
 <h2>Pseudocode</h2>
@@ -127,12 +129,13 @@ Output: corrected frame
 9. Blur + upsample gain
 10. Apply gain to frame
 11. Normalize output
+12. Convert RGB → BGR
 </pre>
 
 <h2>Simulink Feedback Control Model</h2>
 
 <p>
-The system implements a feedback-controlled gain update where the previous gain map is blended with the current measurement. This prevents oscillations and stabilizes color correction over time.
+The system implements a feedback-controlled gain update where the previous gain map is blended with the current measurement. This prevents abrupt frame-to-frame correction changes and stabilizes the image recovery process over time.
 </p>
 
 \[
@@ -142,7 +145,7 @@ G_{k,m,n} =
 (1-\alpha)G^{\text{clipped}}_{k,m,n}
 \]
 
-<img src="underWaterFilter_Simulink_Model.png" alt="Simulink Model" width="900">
+<img src="underWaterFilter_Simulink_Model.png" alt="Simulink Feedback Control Model" width="900">
 
 <h2>Real-Time Compute Performance</h2>
 
@@ -151,28 +154,43 @@ To enable real-time execution, the gain map is computed on a downsampled image b
 </p>
 
 <table border="1" cellpadding="8">
-<tr>
-<th>Method</th>
-<th>Compute Time</th>
-<th>FPS</th>
-</tr>
-
-<tr>
-<td>Full Resolution</td>
-<td>~120 ms</td>
-<td>~8 FPS</td>
-</tr>
-
-<tr>
-<td>Downsampled</td>
-<td>~39 ms</td>
-<td>~25 FPS</td>
-</tr>
-
+    <tr>
+        <th>Method</th>
+        <th>Compute Time</th>
+        <th>FPS</th>
+    </tr>
+    <tr>
+        <td>Full Resolution</td>
+        <td>~120 ms</td>
+        <td>~8 FPS</td>
+    </tr>
+    <tr>
+        <td>Downsampled</td>
+        <td>~39 ms</td>
+        <td>~25 FPS</td>
+    </tr>
 </table>
 
 <p>
 The optimized implementation achieves real-time performance suitable for embedded deployment.
+</p>
+
+<h2>Performance Metrics</h2>
+
+<p>
+The following metrics were collected during runtime evaluation of the underwater image recovery filter:
+</p>
+
+<ul>
+    <li>Average frame compute time: ~39 ms</li>
+    <li>Processing frame rate: ~25 FPS</li>
+    <li>Gain map resolution: downsampled to ~160 px width</li>
+    <li>Temporal smoothing coefficient: \(\alpha = 0.95\)</li>
+    <li>Gain limits: \(G_{\min} = 0.5,\; G_{\max} = 2.5\)</li>
+</ul>
+
+<p>
+These results demonstrate that the optimized implementation meets real-time constraints for embedded deployment.
 </p>
 
 <p>
