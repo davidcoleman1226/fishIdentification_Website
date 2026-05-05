@@ -145,93 +145,77 @@ G_{k,m,n} =
 (1-\alpha)G^{\text{clipped}}_{k,m,n}
 \]
 
-<img src="underWaterFilter_Simulink_Model.png" alt="Simulink Feedback Control Model" width="900">
+<img src="underWaterFilter_Simulink_Model.png" width="900">
 
 <h2>Real-Time Compute Performance</h2>
 
 <p>
-To enable real-time execution, the gain map is computed on a downsampled image before being expanded back to full resolution. This reduced computational cost by approximately 3×, increasing throughput from ~8 FPS to 25.54 FPS. These measurements reflect only the image recovery stage and do not include the additional latency introduced by the downstream machine learning inference in the full field deployment pipeline.
+To enable real-time execution, the gain map is computed on a downsampled image before being expanded back to full resolution. This reduced computational cost by approximately 3×, increasing throughput from ~8 FPS to 25.54 FPS.
 </p>
 
 <table border="1" cellpadding="8">
-    <tr>
-        <th>Method</th>
-        <th>Compute Time</th>
-        <th>FPS</th>
-    </tr>
-    <tr>
-        <td>Full Resolution</td>
-        <td>~120 ms</td>
-        <td>~8 FPS</td>
-    </tr>
-    <tr>
-        <td>Downsampled</td>
-        <td>39.15 ms</td>
-        <td>25.54 FPS</td>
-    </tr>
+<tr>
+<th>Method</th>
+<th>Compute Time</th>
+<th>FPS</th>
+</tr>
+
+<tr>
+<td>Full Resolution</td>
+<td>~120 ms</td>
+<td>~8 FPS</td>
+</tr>
+
+<tr>
+<td>Downsampled</td>
+<td>39.15 ms</td>
+<td>25.54 FPS</td>
+</tr>
 </table>
-
-<p>
-The optimized implementation achieves real-time performance suitable for embedded deployment applications.
-</p>
-
-<h2>Performance Metrics</h2>
-
-<p>
-The following metrics were collected during runtime evaluation of the underwater image recovery filter:
-</p>
-
-<ul>
-    <li>Average frame compute time: 39.15 ms/frame</li>
-    <li>Processing frame rate: 25.54 FPS</li>
-    <li>Gain map resolution: downsampled to 160 px width</li>
-    <li>Temporal smoothing coefficient: \(\alpha = 0.95\)</li>
-    <li>Gain limits: \(G_{\min} = 0.5,\; G_{\max} = 2.5\)</li>
-</ul>
-
-<p>
-These results demonstrate that the optimized implementation meets real-time constraints for embedded deployment applications.
-</p>
 
 <h2>Filter Diagnostic Plots</h2>
 
 <h3>Original vs. Filtered Frame</h3>
 <img src="original_vs_filtered.png" width="900">
 <p>
-Comparison between the original and filtered frame demonstrates the image recovery process. Turbidity effects are reduced, and overall color balance is improved, enhancing visual clarity and feature distinguishability.
+Comparison between the original and filtered frame demonstrates the image recovery process. Turbidity effects are reduced, and overall color balance is improved.
 </p>
 
 <h3>Smoothed Spatial Gain Map</h3>
 <img src="gain_map.png" width="700">
 <p>
-This spatial gain map shows the per-pixel correction applied across the frame. Temporal smoothing stabilizes the gain distribution, preventing abrupt changes and ensuring consistent color correction over time.
-</p>
-<p>
-Regions with higher gain correspond to areas experiencing stronger attenuation in the original image.
+This spatial gain map shows the per-pixel correction applied across the frame. Regions with higher gain correspond to areas experiencing stronger attenuation.
 </p>
 
 <h3>Frame Compute Time</h3>
 <img src="frame_compute_time.png" width="800">
 <p>
-Per-frame compute time remained fairly stable around the measured average of 39.15 ms/frame. Occasional spikes appear in the plot, likely due to video decoding, operating system scheduling, or memory overhead rather than instability in the feedback control algorithm.
-</p>
-<p>
-Despite these transient variations, the system maintains consistent real-time performance at approximately 25.54 FPS.
+Per-frame compute time remains stable around 39.15 ms with occasional spikes due to system-level overhead.
 </p>
 
 <h3>RGB Mean Comparison</h3>
 <img src="rgb_mean_comparison.png" width="700">
 <p>
-The RGB mean comparison shows the average channel intensities before and after filtering. The filter drives the color distribution toward a balanced target RGB vector, reducing color bias caused by underwater light attenuation and improving overall color consistency.
+The RGB mean comparison shows convergence toward a balanced target distribution, consistent with the feedback control objective.
 </p>
+
+<h2>References</h2>
+
 <p>
-This behavior reflects the feedback control objective of driving the measured RGB mean toward the desired target state.
+The proposed method draws from established principles in feedback control, color constancy, and real-time image processing.
 </p>
+
+<ol>
+    <li>G. F. Franklin, J. D. Powell, and A. Emami-Naeini, <i>Feedback Control of Dynamic Systems</i>, 7th ed., Pearson, 2015.</li>
+    <li>G. F. Franklin, J. D. Powell, and M. L. Workman, <i>Digital Control of Dynamic Systems</i>, 3rd ed., Addison-Wesley, 1998.</li>
+    <li>R. C. Gonzalez and R. E. Woods, <i>Digital Image Processing</i>, 4th ed., Pearson, 2018.</li>
+    <li>D. J. Jobson, Z. Rahman, and G. A. Woodell, “A multiscale Retinex for color image enhancement,” <i>IEEE Trans. Image Processing</i>, 1997.</li>
+    <li>C. O. Ancuti et al., “Enhancing underwater images by fusion,” <i>CVPR</i>, 2012.</li>
+</ol>
 
 <p>
 <a href="index.html">Back to Home</a>
 </p>
 
 </body>
-</html>
 </html>
