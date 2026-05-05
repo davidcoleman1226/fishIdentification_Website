@@ -11,14 +11,19 @@
 <p>
 This page describes the data mining and preprocessing pipeline used to build the fish species dataset.
 </p>
-    <p>
+
+<p>
 The dataset creation process was time-consuming and well-suited for automation. An automated pipeline was developed to mine image data, process images, and organize the dataset. This approach reduces manual effort while maintaining dataset quality. The pipeline is modular and easily customizable, allowing new data sources to be incorporated and image processing methods to be applied across the entire dataset.
+</p>
+
+<h2>Data Sources</h2>
 
 <ul>
     <li>iNaturalist — community-sourced wildlife observations with labeled images</li>
     <li>GBIF (Global Biodiversity Information Facility) — aggregated biodiversity occurrence records with image data</li>
 </ul>
-    <h2>Pipeline Overview</h2>
+
+<h2>Pipeline Overview</h2>
 
 <ol>
     <li>Download images by species using automated scripts (iNaturalist + GBIF)</li>
@@ -29,6 +34,49 @@ The dataset creation process was time-consuming and well-suited for automation. 
     <li>Resize and standardize images for model training</li>
     <li>Assemble final dataset for machine learning pipeline</li>
 </ol>
+
+<h2>Manual Filtering Criteria</h2>
+
+<p>
+After automated image collection, each image was manually reviewed before entering the clean dataset. This step was necessary because online image sources often include poor angles, partial fish, obstructed subjects, duplicate images, low-resolution images, or images containing multiple species.
+</p>
+
+<ul>
+    <li><strong>Keep:</strong> clear image of the target species, full or mostly full fish visible, good enough resolution, and minimal obstruction.</li>
+    <li><strong>Reject:</strong> wrong species, poor visibility, severe blur, heavily obstructed fish, duplicate image, or image not useful for training.</li>
+    <li><strong>Maybe:</strong> uncertain species label or usable image quality but not ideal for the final dataset.</li>
+</ul>
+
+<p>
+Only images marked as acceptable were moved forward into the clean dataset and used for later preprocessing or machine learning.
+</p>
+
+<h2>Background Removal Comparison</h2>
+
+<p>
+Two dataset preparation paths were evaluated: one using raw images and one using background removal. Background removal produces a controlled, high-contrast dataset, while raw images preserve environmental context.
+</p>
+
+<div style="display: flex; gap: 40px;">
+
+<div>
+<h3>Raw Image</h3>
+<img src="YOUR_RAW_IMAGE_FILENAME.png" width="300">
+<p>Original image with natural background.</p>
+</div>
+
+<div>
+<h3>Background Removed</h3>
+<img src="YOUR_PROCESSED_IMAGE_FILENAME.png" width="300">
+<p>Processed image with isolated fish and white background.</p>
+</div>
+
+</div>
+
+<p>
+For this project, the raw image dataset was used for field-oriented machine learning, since it better represents real-world underwater conditions. The background-removed dataset was retained as a controlled alternative for potential future model training and comparison.
+</p>
+
 <p>
 <a href="index.html">Back to Home</a>
 </p>
