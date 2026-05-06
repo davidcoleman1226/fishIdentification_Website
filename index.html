@@ -7,10 +7,21 @@
           box-sizing: border-box;
         }
         
-        .img-container {
-          float: left;
-          width: 33.33%;
-          padding: 5px;
+        /* Add flexbox styles */
+        .row {
+          display: flex;
+          gap: 15px; /* Adds space between the columns */
+          margin-bottom: 20px;
+        }
+        
+        .column {
+          flex: 1; /* Ensures both columns take up equal space */
+        }
+        
+        .column img {
+          width: 100%; /* Makes the image fill the column */
+          height: auto;
+          display: block; /* Removes unwanted spacing underneath the image */
         }
         
         .clearfix::after {
@@ -73,10 +84,10 @@
     
     <div class="row">
           <div class="column">
-             <img src="Clearresults.jpg" alt="ClearResults" style="width:25%">
+             <img src="Clearresults.png" alt="ClearResults" style="width:25%">
           </div>
           <div class="column">
-            <img src="Muddyresults.jpg" alt="MuddyResults" style="width:25%">
+            <img src="Muddyresults.png" alt="MuddyResults" style="width:25%">
           </div>
         </div>
 
