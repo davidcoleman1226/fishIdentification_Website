@@ -7,8 +7,8 @@
     <h1>Carp Object Detection for Invasive Species Control</h1>
     <!-- <h2>Project Sections</h2> -->
     <h2>Motivations</h2>
-    For our final project we were inspired to find a real life implementation for computer vision. A field that we've always been curious about but hadn't had the chance to explore until now was aquaculture and conservation. 
-    A few Aquatic invasive species threaten Madison area lakes, such as Zebra mussels and Spiny water fleas. To get a better perspective on what computer vision could do in this area, we talked to David Rowe. 
+    <p>For our final project we were inspired to find a real life implementation for computer vision. A field that we've always been curious about but hadn't had the chance to explore until now was aquaculture and conservation. 
+    A few Aquatic invasive species threaten Madison area lakes, such as Zebra mussels and Spiny water fleas. To get a better perspective on what computer vision could do in this area, we talked to David Rowe. </p>
     A former Fish Supervisor at the Southern District of the DNR, David Row is now the Lake Management Supervisor at the Dane County Land & Water Resources Department.
     He told us about how Common Carp disrupt plant growth with their feeding patterns, turning high visibility parts of the lake into silty and low visibility ones. They are an invasive species and overproliferate, which endangers
     other native species. We discussed current forms of removal, using traps and trained personell to select and remove Carp from waterways during the annual spawning season. David gave us some ideas about how an autonomous system to
@@ -20,10 +20,22 @@
     visibility and stark white bakcgrounds. So a image dataset pipleine for training was created to scrape fish images off the internet and impose the fish onto a white background. This would put the fish into 
     an environment that they would be recognized by the trained YOLO algorithm. The details of this system are outlined here: <a href="dataset_pipeline.html">Dataset Pipeline</a>.
 
-    However we realized that a novel system wouldn't be at a chokepoint but a passive trap that could capture fish in a specific lake throughout the year (while the ice is melted). So we modfied our strategy into two parralell paths:
+    However we realized that a novel system wouldn't be at a chokepoint but a passive trap that could capture fish in a specific lake throughout the year (while the ice is melted). So we modfied our strategy taking into account the lake environments
+
+    <p> Lake environments present multiple challenges </p>
+    <dl>
+      <dt>Variable Environment</dt>
+      <dd>- etc etc</dd>
+      <dt>Visual Light scattered</dt>
+      <dd>- etc unevenly attenuated</dd>
+      <dt>Floating particles</dt>
+      <dd>- etc Freshwater ecosystems contain moving bits of....</dd>  
+    </dl>
+
+    
     1. Training on Muddied images
 
-    2. Active filtering of 
+    2. Active filtering of incoming images
     
     <p><a href="rtos.html">RTOS Image Recovery Page</a></p>
     <p></p>    
