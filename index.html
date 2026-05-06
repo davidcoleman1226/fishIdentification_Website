@@ -69,10 +69,10 @@
 
     <div class="row">
       <div class="column">
-         <img src="CleanSet.jpg" alt="CleanSet" style="width:100%">
+         <img src="CleanSet.jpg" alt="CleanSet" style="width:75%">
       </div>
       <div class="column">
-        <img src="MuddySet.jpg" alt="MuddySet" style="width:100%">
+        <img src="MuddySet.jpg" alt="MuddySet" style="width:75%">
       </div>
     </div>
     
@@ -84,10 +84,10 @@
     
     <div class="row">
           <div class="column">
-             <img src="Clearresults.png" alt="ClearResults" style="width:100%">
+             <img src="Clearresults.png" alt="ClearResults" style="width:75%">
           </div>
           <div class="column">
-            <img src="Muddyresults.png" alt="MuddyResults" style="width:100%">
+            <img src="Muddyresults.png" alt="MuddyResults" style="width:75%">
           </div>
         </div>
 
@@ -107,7 +107,7 @@
 
     
     <figure>
-    <img src="4x4Comparison.jpg" alt="FieldTesting" style="width:50%">
+    <img src="4x4Comparison.jpg" alt="4x4Comparison" style="width:50%">
     <figcaption>Comparison between Yolo object detection on Filtered vs Unfiltered footage </figcaption>
     </figure>
 
@@ -117,8 +117,27 @@
     A blue robotics waterproof tube with dome cap was used as a container for the electronics. A custom camera mount was designed and 3D printed to center the lens in the dome. This prevents distortions when filming underwater. 
     The mount also hosted the Raspberry pi, running a generic Yolo script to draw boxes around recognized objects. This script was modified to inclued the active filtering component discribed <a href="rtos.html">here.</a> </p>
 
+    figure>
+    <img src="electronicsTube.jpg" alt="electronicsTube" style="width:50%">
+    <figcaption>Tube used to house electronics and camera </figcaption>
+    </figure>
+    
     <p> A cart of equipment was brought to the mouth of a river near the Bakke Recreational center. We hoped to spot some fish with the camera but discovered two limitations in our physical system  </p>
     
+    <dl>
+      <dt>Camera Focal Length</dt>
+      <dd>- The IMX415 MIPI Camera Module from Arducam had a fixed, longer range focus that made it difficult to see close up objects to validate how clear our filter was making the underwater environment </dd>
+      <dt>Required special parts for full waterproofing</dt>
+      <dd>- A power cable and hdmi cable were led through the back of the tube and to a powersource and portable moniter. Usually cables that interface between the inside and outside of a water tight container go through a process called
+      potting, where resin is poured and cured around the cable in a special threaded part. This threaded part can be attached to the backplate of a blue robotics tube and maintain a seal. We were not able to aquire the proper plugs and materials
+      in time to take the project into the field. This meant we were limited to sticking the camera half of the tube into the water while keeping the open back half above the water to avoid drowning the electronics. </dd>
+
+    </dl>
+    
+    <figure>
+    <img src="fieldTesting.jpg" alt="FieldTesting" style="width:50%">
+    <figcaption> Feild testing at lake Mendota near the Bakke </figcaption>
+    </figure>
     
     <p></p>
     <p></p>    
