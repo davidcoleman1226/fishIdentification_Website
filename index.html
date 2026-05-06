@@ -2,6 +2,23 @@
 <html>
 <head>
     <title>CS 766 Project</title>
+    <style>
+        * {
+          box-sizing: border-box;
+        }
+        
+        .img-container {
+          float: left;
+          width: 33.33%;
+          padding: 5px;
+        }
+        
+        .clearfix::after {
+          content: "";
+          clear: both;
+          display: table;
+        }
+        </style>
 </head>
 <body>
     <h1>Carp Object Detection for Invasive Species Control</h1>
@@ -56,10 +73,10 @@
     
     <div class="row">
           <div class="column">
-             <img src="Clearresults.jpg" alt="CleanSet" style="width:25%">
+             <img src="Clearresults.jpg" alt="ClearResults" style="width:25%">
           </div>
           <div class="column">
-            <img src="Muddyresults.jpg" alt="MuddySet" style="width:25%">
+            <img src="Muddyresults.jpg" alt="MuddyResults" style="width:25%">
           </div>
         </div>
 
