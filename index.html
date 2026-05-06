@@ -22,7 +22,7 @@
 
     However we realized that a novel system wouldn't be at a chokepoint but a passive trap that could capture fish in a specific lake throughout the year (while the ice is melted). So we modfied our strategy taking into account the lake environments
 
-    <p> Lake environments present multiple challenges </p>
+    <p> Lake environments present multiple challenges: </p>
     <dl>
       <dt>Variable Environment</dt>
       <dd>- etc etc</dd>
@@ -32,9 +32,16 @@
       <dd>- etc Freshwater ecosystems contain moving bits of....</dd>  
     </dl>
 
+    <p> To accomodate for these conditions, we modified our <a href="dataset_pipeline.html">image collection process</a> to find 
+    images of select species, but did not remove the backgrounds. We manually labeled the fish in each image using RoboFlow, drawing
+    bounding boxes to indicate to the algorithm where in the image each fish was located. </p>
+
+    <p> Next we wrote a python script [LINK] using the library albumentation to add random amounts of green shift, blur, and noise to the 
+    dataset while retaining the labels in each image</p> 
+    <img src="CleanSet.jpg" alt="CleanSet"><img src="MuddySet.jpg" alt="MuddySet">
     
     1. Training on Muddied images
-
+    
     2. Active filtering of incoming images
     
     <p><a href="rtos.html">RTOS Image Recovery Page</a></p>
