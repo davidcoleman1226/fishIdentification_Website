@@ -1,0 +1,753 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Aptos;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:12.0pt;
+	font-family:"Aptos",sans-serif;}
+.MsoChpDefault
+	{font-family:"Aptos",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:115%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>import</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>cv2</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>import</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>albumentations</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>as</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>A</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>import</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>os</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>from</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>pathlib</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>import</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>Path</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>from</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>tqdm</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>import</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>tqdm</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>import</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>shutil</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#PATHS</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>input_root</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>Path</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>&quot;ClearWaterv1&quot;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>) &nbsp;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#8B949E'># Your current
+folder</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>output_root</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>Path</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>&quot;PondWaterv1&quot;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>) </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#8B949E'># The new filtered
+folder</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#
+subfolders, </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>subsets</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> [</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>'train'</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>'valid'</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>]</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#pond
+filter</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>pond_transform</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>A</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>Compose</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>([</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#Murky
+Green/Brown Tint</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>A</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>RGBShift</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>r_shift_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>-</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.12</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>-</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.12</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>), </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>g_shift_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.08</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.08</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>), </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>b_shift_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>-</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.16</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>-</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.16</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>), </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>p</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>1.0</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>),</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#Blur</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>A</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>MedianBlur</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>blur_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>5</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>p</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.7</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>),</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#Adding
+a very fine texture so the water isn't &quot;perfectly&quot; flat</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>A</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>GaussNoise</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>var_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.005</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.02</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>), </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>p</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.5</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>),</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#brightness
+and contrast</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>A</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>RandomBrightnessContrast</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>brightness_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=-</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.2</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>contrast_limit</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=-</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>0.3</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>p</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#B5CEA8'>1.0</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>),</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>])</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#FF7B72'>def</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D2A8FF'>process_dataset</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>():</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>for</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>subset</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>in</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>subsets</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>:</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D2A8FF'>print</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FF7B72'>f</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D7BA7D'>\n</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>Processing </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FF7B72'>{</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>subset</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FF7B72'>}</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'> set...&quot;</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#8B949E'># Define paths for this subset</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>img_input_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>input_root</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>subset</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;images&quot;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>lbl_input_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>input_root</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>subset</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;labels&quot;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>img_output_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>output_root</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>subset</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;images&quot;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>lbl_output_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>output_root</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>subset</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;labels&quot;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#8B949E'># Create output folders</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>img_output_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D2A8FF'>mkdir</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FFA657'>parents</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#569CD6'>True</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>, </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FFA657'>exist_ok</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#569CD6'>True</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>lbl_output_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D2A8FF'>mkdir</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FFA657'>parents</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#569CD6'>True</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>, </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#FFA657'>exist_ok</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#569CD6'>True</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#8B949E'># Get all images</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>image_paths</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D4D4D4'>=</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#4EC9B0'>list</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>img_input_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D2A8FF'>glob</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;*.jpg&quot;</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>)) </span><span style='font-size:9.5pt;font-family:
+Consolas;color:#D4D4D4'>+</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#4EC9B0'>list</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>img_input_dir</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D2A8FF'>glob</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#A5D6FF'>&quot;*.png&quot;</span><span style='font-size:9.5pt;font-family:
+Consolas;color:#BBBEBF'>))</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C586C0'>for</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>img_path</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>in</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#4EC9B0'>tqdm</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>(</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>image_paths</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>):</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#8B949E'># Process Image</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>image</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D4D4D4'>=</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>cv2</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D2A8FF'>imread</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>str</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>img_path</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>))</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C586C0'>if</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>image</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#569CD6'>is</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#569CD6'>None</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>: </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C586C0'>continue</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>image</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D4D4D4'>=</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>cv2</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D2A8FF'>cvtColor</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>image</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>, </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>cv2</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>COLOR_BGR2RGB</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>transformed</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D4D4D4'>=</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>pond_transform</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FFA657'>image</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>image</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>)[</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>&quot;image&quot;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>]</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>transformed_bgr</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>=</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>cv2</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D2A8FF'>cvtColor</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>transformed</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#4EC9B0'>cv2</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>COLOR_RGB2BGR</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#8B949E'># Save Image</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>cv2</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D2A8FF'>imwrite</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>str</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>img_output_dir</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#DCDCAA'>/</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>img_path</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>name</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>), </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>transformed_bgr</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#8B949E'># &nbsp;Copy Label (if exists)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>label_path</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D4D4D4'>=</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>lbl_input_dir</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#DCDCAA'>/</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#FF7B72'>f</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#A5D6FF'>&quot;</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#FF7B72'>{</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>img_path</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>stem</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#FF7B72'>}</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#A5D6FF'>.txt&quot;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C586C0'>if</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>label_path</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D2A8FF'>exists</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>():</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:
+9.5pt;font-family:Consolas;color:#4EC9B0'>shutil</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D2A8FF'>copy</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>label_path</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>lbl_output_dir</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#DCDCAA'>/</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>label_path</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>.</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>name</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#8B949E'>#
+Copy Metadata Files</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>for</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>meta_file</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>in</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> [</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>'data.yaml'</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>'README.dataset.txt'</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>'README.roboflow.txt'</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>]:</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C586C0'>if</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> (</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>input_root</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#DCDCAA'>/</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'> </span><span style='font-size:9.5pt;font-family:Consolas;
+color:#C9D1D9'>meta_file</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>).</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#D2A8FF'>exists</span><span style='font-size:9.5pt;font-family:Consolas;
+color:#BBBEBF'>():</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#4EC9B0'>shutil</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>.</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#D2A8FF'>copy</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'>(</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>input_root</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#DCDCAA'>/</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>meta_file</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'>, </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>output_root</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#DCDCAA'>/</span><span style='font-size:9.5pt;
+font-family:Consolas;color:#BBBEBF'> </span><span style='font-size:9.5pt;
+font-family:Consolas;color:#C9D1D9'>meta_file</span><span style='font-size:
+9.5pt;font-family:Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#C586C0'>if</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>__name__</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D4D4D4'>==</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'> </span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>&quot;__main__&quot;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>:</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#D2A8FF'>process_dataset</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>()</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;line-height:12.75pt;background:
+#121314'><span style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>&nbsp;
+&nbsp; </span><span style='font-size:9.5pt;font-family:Consolas;color:#D2A8FF'>print</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>(</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FF7B72'>f</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>&quot;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#D7BA7D'>\n</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>Successfully created
+</span><span style='font-size:9.5pt;font-family:Consolas;color:#FF7B72'>{</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#C9D1D9'>output_root</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#FF7B72'>}</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#A5D6FF'>&quot;</span><span
+style='font-size:9.5pt;font-family:Consolas;color:#BBBEBF'>)</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>
