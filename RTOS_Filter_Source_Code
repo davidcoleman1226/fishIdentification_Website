@@ -1,0 +1,301 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RTOS Filter Source Code</title>
+</head>
+
+<body>
+
+<h1>RTOS Underwater Image Recovery Source Code</h1>
+
+<h2>Feedback Control Image Recovery Filter</h2>
+
+<pre>
+#!/usr/bin/env python3
+
+import cv2
+import numpy as np
+
+
+class FastSpatialRGBWaterFilter:
+
+    def __init__(
+        self,
+        target_rgb=(0.5, 0.5, 0.5),
+        alpha=0.95,
+        small_width=160,
+        tile_size=10,
+        gain_min=0.5,
+        gain_max=2.5,
+    ):
+
+        self.target_rgb = np.array(target_rgb, dtype=np.float32)
+        self.alpha = alpha
+        self.small_width = small_width
+        self.tile_size = tile_size
+        self.gain_min = gain_min
+        self.gain_max = gain_max
+
+        self.gain_map_prev = None
+
+    def apply_filter(self, frame_bgr):
+
+        frame_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+        frame = frame_rgb.astype(np.float32) / 255.0
+
+        h, w = frame.shape[:2]
+
+        scale = self.small_width / w
+        small_h = int(h * scale)
+
+        small = cv2.resize(
+            frame,
+            (self.small_width, small_h),
+            interpolation=cv2.INTER_AREA
+        )
+
+        gain_map = np.zeros_like(small)
+
+        for y in range(0, small_h, self.tile_size):
+            for x in range(0, self.small_width, self.tile_size):
+
+                tile = small[
+                    y:y+self.tile_size,
+                    x:x+self.tile_size
+                ]
+
+                mean_rgb = tile.mean(axis=(0, 1))
+
+                gain = self.target_rgb / (mean_rgb + 1e-6)
+
+                gain = np.clip(
+                    gain,
+                    self.gain_min,
+                    self.gain_max
+                )
+
+                gain_map[
+                    y:y+self.tile_size,
+                    x:x+self.tile_size
+                ] = gain
+
+        if self.gain_map_prev is None:
+            smoothed_gain = gain_map
+        else:
+            smoothed_gain = (
+                self.alpha * self.gain_map_prev
+                + (1.0 - self.alpha) * gain_map
+            )
+
+        self.gain_map_prev = smoothed_gain.copy()
+
+        smoothed_gain = cv2.GaussianBlur(
+            smoothed_gain,
+            (11, 11),
+            0
+        )
+
+        gain_full = cv2.resize(
+            smoothed_gain,
+            (w, h),
+            interpolation=cv2.INTER_LINEAR
+        )
+
+        corrected = frame * gain_full
+
+        corrected = np.clip(corrected, 0.0, 1.0)
+
+        corrected_uint8 = (corrected * 255).astype(np.uint8)
+
+        corrected_bgr = cv2.cvtColor(
+            corrected_uint8,
+            cv2.COLOR_RGB2BGR
+        )
+
+        return corrected_bgr
+</pre>
+
+<h2>Filter Diagnostic Plot Script</h2>
+
+<pre>
+#!/usr/bin/env python3
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+
+from UnderWater_Filter_NotRTOS import FastSpatialRGBWaterFilter
+
+
+input_video = "carpFootage_Original.mp4"
+sample_frame_number = 100
+
+cap = cv2.VideoCapture(input_video)
+
+if not cap.isOpened():
+    raise RuntimeError("Could not open video.")
+
+water_filter = FastSpatialRGBWaterFilter(
+    target_rgb=(0.5, 0.5, 0.5),
+    alpha=0.95,
+    small_width=160,
+    tile_size=10,
+    gain_min=0.5,
+    gain_max=2.5
+)
+
+frame_times = []
+frame_count = 0
+saved_frame = None
+
+while True:
+
+    ret, frame = cap.read()
+
+    if not ret:
+        break
+
+    start = time.perf_counter()
+
+    filtered = water_filter.apply_filter(frame)
+
+    end = time.perf_counter()
+
+    frame_times.append((end - start) * 1000)
+
+    frame_count += 1
+
+    if frame_count == sample_frame_number:
+
+        saved_frame = frame.copy()
+
+        saved_filtered = filtered.copy()
+
+        saved_gain_map = water_filter.gain_map_prev.copy()
+
+cap.release()
+
+original_rgb = cv2.cvtColor(
+    saved_frame,
+    cv2.COLOR_BGR2RGB
+)
+
+filtered_rgb = cv2.cvtColor(
+    saved_filtered,
+    cv2.COLOR_BGR2RGB
+)
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.imshow(original_rgb)
+plt.title("Original Frame")
+plt.axis("off")
+
+plt.subplot(1, 2, 2)
+plt.imshow(filtered_rgb)
+plt.title("Filtered Frame")
+plt.axis("off")
+
+plt.tight_layout()
+plt.savefig("original_vs_filtered.png", dpi=300)
+
+orig_means = original_rgb.mean(axis=(0, 1))
+filt_means = filtered_rgb.mean(axis=(0, 1))
+
+labels = ["R", "G", "B"]
+x = np.arange(len(labels))
+width = 0.35
+
+plt.figure(figsize=(8, 5))
+
+plt.bar(
+    x - width/2,
+    orig_means,
+    width,
+    label="Original"
+)
+
+plt.bar(
+    x + width/2,
+    filt_means,
+    width,
+    label="Filtered"
+)
+
+plt.xticks(x, labels)
+
+plt.ylabel("Mean Intensity")
+
+plt.title("RGB Channel Mean Comparison")
+
+plt.legend()
+
+plt.tight_layout()
+
+plt.savefig(
+    "rgb_mean_comparison.png",
+    dpi=300
+)
+
+gain_display = saved_gain_map.mean(axis=2)
+
+plt.figure(figsize=(8, 6))
+
+plt.imshow(gain_display)
+
+plt.colorbar(label="Average Gain")
+
+plt.title("Smoothed Spatial Gain Map")
+
+plt.axis("off")
+
+plt.tight_layout()
+
+plt.savefig("gain_map.png", dpi=300)
+
+plt.figure(figsize=(9, 5))
+
+plt.plot(frame_times)
+
+plt.xlabel("Frame Number")
+
+plt.ylabel("Compute Time [ms]")
+
+plt.title("Per-Frame Filter Compute Time")
+
+plt.tight_layout()
+
+plt.savefig(
+    "frame_compute_time.png",
+    dpi=300
+)
+
+print(
+    f"Average compute time: "
+    f"{np.mean(frame_times):.2f} ms/frame"
+)
+
+print(
+    f"Approx FPS: "
+    f"{1000 / np.mean(frame_times):.2f}"
+)
+</pre>
+
+<p>
+<a href="rtos.html">Back to RTOS Image Recovery Page</a>
+</p>
+
+<p>
+<a href="dataset_pipeline.html">Dataset Pipeline Page</a>
+</p>
+
+<p>
+<a href="index.html">Back to Home</a>
+</p>
+
+</body>
+</html>
+```
