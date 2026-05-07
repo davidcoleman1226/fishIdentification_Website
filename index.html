@@ -111,7 +111,18 @@
     <figcaption>Comparison between Yolo object detection on Filtered vs Unfiltered footage </figcaption>
     </figure>
 
-    <p> [CONCLUSIONS] </p>
+    <h2>Results and Conclusions</h2>
+    <p>
+    The results show that the image recovery filter had a meaningful effect on model performance. The clean YOLO model without the feedback-control image filter failed to recognize the fish object in the test footage. In contrast, the dirty model recognized the object with and without filtering, but still misidentified the species.
+    </p>
+
+    <p>
+    The strongest result occurred when the clean YOLO model was paired with the feedback-control image recovery filter. In this case, the model correctly identified the fish species with a confidence peak of 0.92. This suggests that, for the tested video sample, the most effective configuration was the clean machine learning model combined with real-time image recovery. These results were not absolute however, as there were also instances where performance between the models was similarly effective. Additional experimentation in dynamic underwater environments is required before making a final determination.
+    </p>
+
+    <p>
+    Overall, the project demonstrates that underwater image recovery can improve the usefulness of computer vision models in low-visibility freshwater environments. While the system still requires additional field testing, improved waterproofing, and model training on more representative field data, the combined filtering and detection pipeline provides a solid foundation for automated invasive fish identification.
+    </p>
 
     <p> We wanted to bring this system into the real world to test its efficacy when running live on a Raspberry Pi 4B
     A blue robotics waterproof tube with dome cap was used as a container for the electronics. A custom camera mount was designed and 3D printed to center the lens in the dome. This prevents distortions when filming underwater. 
