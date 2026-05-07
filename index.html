@@ -33,34 +33,35 @@
 </head>
 <body>
     <h1>Carp Object Detection for Invasive Species Control</h1>
+    <h2>David Coleman and Jack Stonecipher</h2>
     <!-- <h2>Project Sections</h2> -->
-    <h2>Motivations</h2>
+    
     <p>For our final project we were inspired to find a real life implementation for computer vision. A field that we've always been curious about but hadn't had the chance to explore until now was aquaculture and conservation. 
     A few Aquatic invasive species threaten Madison area lakes, such as Zebra mussels and Spiny water fleas. To get a better perspective on what computer vision could do in this area, we talked to David Rowe. </p>
-    A former Fish Supervisor at the Southern District of the DNR, David Row is now the Lake Management Supervisor at the Dane County Land & Water Resources Department.
+    A former Fish Supervisor at the Southern District of the DNR, David Rowe is now the Lake Management Supervisor at the Dane County Land & Water Resources Department.
     He told us about how Common Carp disrupt plant growth with their feeding patterns, turning high visibility parts of the lake into silty and low visibility ones. They are an invasive species and overproliferate, which endangers
-    other native species. We discussed current forms of removal, using traps and trained personell to select and remove Carp from waterways during the annual spawning season. David gave us some ideas about how an autonomous system to
-    identify and remove target species would lower the amount of man-hours needed to effectively lower carpo populations in a humane way. 
+    other native species. We discussed current forms of removal, using traps and trained personnel to select and remove Carp from waterways during the annual spawning season. David gave us some ideas about how an autonomous system to
+    identify and remove target species would lower the amount of man-hours needed to effectively lower carp populations in a humane way. 
 
-    For this system we would use a trained object detection machine learning algorithm like "You Only Look Once" (YOLO). [Talk more about this here]
+    <p>For this system we would use a trained object detection machine learning algorithm like "You Only Look Once" (YOLO). </p>
     
-    Our first thought was in the conext of stream systems, where computer vision has been used in fish passageways in dams to remove migrating invasive species. These environments have high
-    visibility and stark white bakcgrounds. So a image dataset pipleine for training was created to scrape fish images off the internet and impose the fish onto a white background. This would put the fish into 
-    an environment that they would be recognized by the trained YOLO algorithm. The details of this system are outlined here: <a href="dataset_pipeline.html">Dataset Pipeline</a>.
+    <p> Our first thought was in the context of stream systems, where computer vision has been used in fish passageways in dams to remove migrating invasive species. These environments have high
+    visibility and stark white backgrounds. So a image dataset pipeline for training was created to scrape fish images off the internet and impose the fish onto a white background. This would put the fish into 
+    an environment that they would be recognized by the trained YOLO algorithm. The details of this system are outlined here: <a href="dataset_pipeline.html">Dataset Pipeline</a>. </p>
 
-    However we realized that a novel system wouldn't be at a chokepoint but a passive trap that could capture fish in a specific lake throughout the year (while the ice is melted). So we modfied our strategy taking into account the lake environments
+    However we realized that a novel system wouldn't be at a chokepoint but a passive trap that could capture fish in a specific lake throughout the year (while the ice is melted). So we modified our strategy taking into account the lake environments
 
     <p> Lake environments present multiple challenges: </p>
     <dl>
       <dt>Variable Environment</dt>
-      <dd>-  </dd>
+      <dd>- In a natural underwater scene, light is constantly being reflected due to the ripples of the water  </dd>
       <dt>Visual Light scattered</dt>
-      <dd>- etc unevenly attenuated</dd>
+      <dd>- Light is unevenly attenuated and distorted underwater</dd>
       <dt>Floating particles</dt>
-      <dd>- etc Freshwater ecosystems contain moving bits of....</dd>  
+      <dd>- Silt and organic matter obscure possible targets to be identified  .</dd>  
     </dl>
 
-    <p> To accomodate for these conditions, we modified our <a href="dataset_pipeline.html">image collection process</a> to find 
+    <p> To accommodate for these conditions, we modified our <a href="dataset_pipeline.html">image collection process</a> to find 
     images of select species, but did not remove the backgrounds. We manually labeled the fish in each image using RoboFlow, drawing
     bounding boxes to indicate to the algorithm where in the image each fish was located. </p>
 
@@ -79,8 +80,8 @@
     
    
     
-    We trained two yolo models, one on the "clean" image set, and one on the "dirty" image set. The model had more trouble training to the dirty image set, likely because shapes were harder to distinguish in the 
-    lower contrast environments. 
+    <p>We trained two YOLO models, one on the "clean" image set, and one on the "dirty" image set. The model had more trouble training to the dirty image set, likely because shapes were harder to distinguish in the 
+    lower contrast environments. </p>
     
     <div class="row">
           <div class="column">
@@ -91,7 +92,7 @@
           </div>
         </div>
 
-    however we did notice some improvements when comparing the two models, like more accurate species Identification. To compare the two models we used a carp fishing video (credit: Underfishing on youtube). The footage captured carp in an environment that we would 
+    however we did notice some improvements when comparing the two models, like more accurate species identification. To compare the two models we used a carp fishing video (credit: Underfishing on youtube). The footage captured carp in an environment that we would 
     likely be operating in. 
     <figure>
     <img src="cleanVsDirty.jpg" alt="cleanVsDirty" style="width:50%">
@@ -103,12 +104,12 @@
     <p> We used the active filtering system outlined on <a href="rtos.html">this page: RTOS Image Recovery.</a> </p>
 
 
-    <p> We ran both clear and muddy Yolo models on the filtered and unfiltered carp fishing videos and compared the results </p>
+    <p> We ran both clear and muddy YOLO models on the filtered and unfiltered carp fishing videos and compared the results </p>
 
     
     <figure>
     <img src="4x4Comparison.jpg" alt="4x4Comparison" style="width:50%">
-    <figcaption>Comparison between Yolo object detection on Filtered vs Unfiltered footage </figcaption>
+    <figcaption>Comparison between YOLO object detection on Filtered vs Unfiltered footage </figcaption>
     </figure>
 
     <h2>Results and Conclusions</h2>
@@ -126,7 +127,7 @@
 
     <p> We wanted to bring this system into the real world to test its efficacy when running live on a Raspberry Pi 4B
     A blue robotics waterproof tube with dome cap was used as a container for the electronics. A custom camera mount was designed and 3D printed to center the lens in the dome. This prevents distortions when filming underwater. 
-    The mount also hosted the Raspberry pi, running a generic Yolo script to draw boxes around recognized objects. This script was modified to inclued the active filtering component discribed <a href="rtos.html">here.</a> </p>
+    The mount also hosted the Raspberry pi, running a generic YOLO script to draw boxes around recognized objects. This script was modified to include the active filtering component described <a href="rtos.html">here.</a> </p>
 
     <figure>
     <img src="electronicsTube.jpg" alt="electronicsTube" style="width:50%">
@@ -139,15 +140,15 @@
       <dt>Camera Focal Length</dt>
       <dd>- The IMX415 MIPI Camera Module from Arducam had a fixed, longer range focus that made it difficult to see close up objects to validate how clear our filter was making the underwater environment </dd>
       <dt>Required special parts for full waterproofing</dt>
-      <dd>- A power cable and hdmi cable were led through the back of the tube and to a powersource and portable moniter. Usually cables that interface between the inside and outside of a water tight container go through a process called
-      potting, where resin is poured and cured around the cable in a special threaded part. This threaded part can be attached to the backplate of a blue robotics tube and maintain a seal. We were not able to aquire the proper plugs and materials
+      <dd>- A power cable and hdmi cable were led through the back of the tube and to a powersource and portable monitor. Usually cables that interface between the inside and outside of a water tight container go through a process called
+      potting, where resin is poured and cured around the cable in a special threaded part. This threaded part can be attached to the backplate of a blue robotics tube and maintain a seal. We were not able to acquire the proper plugs and materials
       in time to take the project into the field. This meant we were limited to sticking the camera half of the tube into the water while keeping the open back half above the water to avoid drowning the electronics. </dd>
 
     </dl>
     
     <figure>
     <img src="fieldTesting.jpg" alt="FieldTesting" style="width:50%">
-    <figcaption> Feild testing at lake Mendota near the Bakke </figcaption>
+    <figcaption> Field testing at lake Mendota near the Bakke </figcaption>
     </figure>
     
     <p></p>
